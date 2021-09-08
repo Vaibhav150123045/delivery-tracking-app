@@ -1,7 +1,7 @@
 import React from "react";
 let renderCount = 0;
 
-export default () => {
+function Header() {
   renderCount++;
 
   return (
@@ -64,3 +64,5 @@ export default () => {
     </div>
   );
 };
+
+export default Header

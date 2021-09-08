@@ -1,4 +1,4 @@
-export default function Customer() {
+function Customer() {
     console.log("Hii");
     return (
       <div>
@@ -6,3 +6,5 @@ export default function Customer() {
       </div>
     )
 }
+
+export default Customer
