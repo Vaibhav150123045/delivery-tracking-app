@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { AgGridColumn, AgGridReact } from "ag-grid-react";
+import { Input, Button } from "antd";
 
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
@@ -85,23 +86,24 @@ const App = () => {
       field: "Seller_Name",
       width: 150,
       sortable: true,
-      filter: "agTextColumnFilter",
+      // filter: "agTextColumnFilter",
     },
     {
       headerName: "status",
       field: "status",
       width: 150,
-      filter: "agSetColumnFilter",
-      filterParams: {
-        values: [
-          "NEW",
-          "SELLER_RECEIVED",
-          "IN_TRANSIT",
-          "RECEIVED_AT_HUB",
-          "OFD",
-          "DELIVERED",
-        ],
-      },
+      // filter: "agSetColumnFilter",
+      // filterParams: {
+      //   values: [
+      //     "NEW",
+      //     "SELLER_RECEIVED",
+      //     "IN_TRANSIT",
+      //     "RECEIVED_AT_HUB",
+      //     "OFD",
+      //     "DELIVERED",
+      //   ],
+      // },
+      // cellStyle: (params) => console.log(params),
     },
     {
       headerName: "CPT",
@@ -121,7 +123,15 @@ const App = () => {
       headerName: "Destination",
       field: "Destination",
       width: 150,
-      filter: "agTextColumnFilter",
+      // filter: "agTextColumnFilter",
+    },
+    {
+      headerName: "Action",
+      field: "action",
+      cellRenderer: "RowButton",
+      filter: false,
+      floatingFilter: false,
+
     },
   ];
 
@@ -131,6 +141,7 @@ const App = () => {
     flex: 1,
     floatingFilter: true,
     resizable: true,
+    tooltipField: "Order_Id",
   };
 
   // will get row data, from here
@@ -145,10 +156,24 @@ const App = () => {
     return true;
   };
 
+  const onFilterTextChange = (event) => {
+    console.log(event.target.value);
+    gridApi.setQuickFilter(event.target.value);
+  };
+
   return (
     <body style={{ backgroundColor: "white", height: "100vh" }}>
       <div style={{ padding: "30px" }}>
         <h1>All orders</h1>
+      </div>
+      <div style={{ color: "black", width: "500px" }}>
+        <Input
+          type="search"
+          placeholder="search an order"
+          onChange={onFilterTextChange}
+          allowClear
+          style={{ display: "flex", flex: 1 }}
+        />
       </div>
       <div
         style={{
@@ -179,6 +204,8 @@ const App = () => {
             animateRows="true"
             enableRangeSelection="true"
             sideBar="sideBar"
+            enableBrowserTooltips={true}
+            frameworkComponents={{ RowButton }}
           />
         </div>
       </div>
@@ -187,3 +214,13 @@ const App = () => {
 };
 
 export default App;
+
+const RowButton = (props) => {
+  return (
+    <div style={{ textAlign: "center" }}>
+      <Button type="primary" style={{ textAlign: "center" }}>
+        received
+      </Button>
+    </div>
+  );
+};
