@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { userLoginDetails, userRoles } from "./constants";
 import Customer from "./customer-journey/customer";
 import Seller from "./seller-journey/seller";
-import HubIncharge from "./hub-incharge-journey/hubIncharge";
+import HubIncharge from "./hub/hubIncharge";
 import { useRouter } from "next/router";
 
 export default function Login() {
