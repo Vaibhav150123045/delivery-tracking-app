@@ -1,82 +1,65 @@
 import React, { useState } from "react";
 import { AgGridColumn, AgGridReact } from "ag-grid-react";
-import { Input, Button } from "antd";
-import SelectHub from "../../components/hub/SelectHub";
-
+import { Input, Button, message, Space } from "antd";
+import SelectHub from "../SelectHub";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
-import { getHubDetails } from "../api";
+import { getHubDetails, receiveOrder } from "../../../pages/api";
+import { LoadingOutlined } from "@ant-design/icons";
 
-const hub_id = 7;
-
-const App = () => {
+const App = (props) => {
+  const { hubId } = props;
   const [gridApi, setGridApi] = useState(null);
   const [columnApi, setColumnApi] = useState(null);
-  const [hub, setHub] = useState(hub_id);
   const [tableData, setTableData] = useState([]);
-
   const handleGridReady = (params) => {
     setGridApi(params.api);
     setColumnApi(params.columnApi);
-    // const statusFilter = params.api.getFilterInstance("status");
-    // statusFilter.setModel({
-    //   type: "contains",
-    //   filter: "pending",
-    // });
-    // params.api.onFilterChanged();
 
     /* fetch data here to populate tables */
-
-    getHubDetails(hub_id)
+    getHubDetails(hubId)
       .then((res) => {
         const { data = {}, message = "" } = res.data;
         console.log("data", data);
 
-        const bags_to_be_received = data.bags_to_be_received;
-        params.api.applyTransaction({ add: bags_to_be_received });
+        const orders_to_be_received = data.orders_to_be_received;
+        params.api.applyTransaction({ add: orders_to_be_received });
       })
       .catch((err) => console.log("err", err));
   };
 
   const columnDefs = [
     {
-      headerName: "bag type",
-      field: "bag_type",
+      headerName: "Next destination",
+      field: "next_destination",
       width: 150,
       checkboxSelection: true,
       headerCheckboxSelection: true,
     },
     {
-      headerName: "bad code",
-      field: "code",
+      headerName: "Order number",
+      field: "order_number",
       width: 150,
       sortable: true,
       // filter: "agTextColumnFilter",
     },
     {
-      headerName: "current bin",
-      field: "current_bin",
+      headerName: "Order status",
+      field: "order_status",
       width: 150,
       filter: "agSetColumnFilter",
     },
 
     {
-      headerName: "current hub",
-      field: "current_hub_id",
+      headerName: "seller name",
+      field: "seller_name",
       width: 150,
       sortable: true,
-      comparator: (valueA, valueB) => {
-        const a = new Date(valueA).getTime();
-        const b = new Date(valueB).getTime();
-        if (a === b) return 0;
-        else if (a > b) return 1;
-        else return -1;
-      },
       filter: "agDateColumnFilter",
     },
     {
-      headerName: "Destination",
-      field: "destination_name",
+      headerName: "Society name",
+      field: "society_name",
       width: 150,
       // filter: "agTextColumnFilter",
     },
@@ -92,6 +75,17 @@ const App = () => {
     {
       headerName: "weight",
       field: "weight",
+      width: "150",
+    },
+
+    {
+      headerName: "Partner id",
+      field: "partner_id",
+      width: "150",
+    },
+    {
+      headerName: "partner name",
+      field: "partner_name",
       width: "150",
     },
     {
@@ -137,9 +131,9 @@ const App = () => {
     <body
       style={{ backgroundColor: "white", height: "100vh", padding: "15px" }}
     >
-      <SelectHub current_hub={hub} onChangeHub={(id) => setHub(id)} />
+      <SelectHub current_hub={"Hub1"} onChangeHub={(id) => setHub(id)} />
       <div style={{ padding: "20px" }}>
-        <h1>bags to receive</h1>
+        <h1>Orders to receive</h1>
       </div>
       <div style={{ color: "black", width: "500px", paddingLeft: "15px" }}>
         <Input
@@ -171,17 +165,12 @@ const App = () => {
             paginationPageSize={10}
             paginationAutoPageSize={true}
             onSelectionChanged={onSelectionChanged}
-            // isRowSelectable={isRowSelectable}
-            // rowSelection="multiple"
-            // rowDeselection="true"
             rowMultiSelectWithClick="false"
-            // singleClickEdit="true"
             animateRows="true"
             enableRangeSelection="true"
             sideBar={true}
             enableBrowserTooltips={true}
             frameworkComponents={{ RowButton }}
-            // onFirstDataRendered={onFirstDataRendered}
           />
         </div>
       </div>
@@ -192,21 +181,46 @@ const App = () => {
 export default App;
 
 const RowButton = (props) => {
-  return (
-    <div style={{ textAlign: "center" }}>
-      <Button
-        type="primary"
-        style={{ textAlign: "center" }}
-        onClick={() => {
-          console.log("shshs");
-          let rowData = props.node.data;
-          console.log("row data", rowData);
-        }}
-      >
-        receive
-      </Button>
-    </div>
-  );
+  const { order_status } = props.node.data;
+  const [loading, setLoading] = useState(false);
+
+  const markOrderReceive = async (payload) => {
+    try {
+      const data = await receiveOrder(payload);
+      console.log("receivei order data", data);
+      setLoading(false);
+      message.success("Order marked received");
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+      message.error("order not marked received");
+    }
+  };
+
+  if (order_status.trim() !== "New")
+    return (
+      <div style={{ textAlign: "center" }}>
+        <Button
+          type="primary"
+          style={{ textAlign: "center" }}
+          onClick={() => {
+            console.log("shshs");
+            let rowData = props.node.data;
+            const { order_number } = rowData;
+            const payload = {
+              order_number,
+            };
+            console.log("payload", payload);
+            setLoading(true);
+            markOrderReceive(payload);
+          }}
+        >
+          receive
+          {loading ? <LoadingOutlined /> : <></>}
+        </Button>
+      </div>
+    );
+  else return <></>;
 };
 
 const statusList = [

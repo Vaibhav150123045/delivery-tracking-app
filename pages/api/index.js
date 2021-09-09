@@ -2,7 +2,7 @@
 
 import axios from "axios";
 // const baseUrl = "https://ba41-103-138-22-2.ngrok.io/single-day-delivery";
-const baseUrl = "http://0db7-103-138-22-2.ngrok.io/single-day-delivery";
+const baseUrl = "http://4091-103-138-22-2.ngrok.io/single-day-delivery";
 
 export function handler(req, res) {
   res.status(200).json({ name: "John Doe" });
@@ -32,12 +32,71 @@ api.interceptors.response.use(
   }
 );
 
+export const createOrder = (data) =>
+  api.post(`${baseUrl}/order_creation/`, data);
+
+//   {
+//     "count": 1,
+//     "order_details" : {
+//         "seller_id": 9,
+//         "society_id": 456,
+//         "weight" : 15
+//     }
+// }
+
+/* seller apis */
+export const getOrderDetails = (order_number) =>
+  api.get(`${baseUrl}/seller/orders/?order_number=${order_number}`);
+
+export const sellerReceive = (data) =>
+  api.post(`${baseUrl}/seller/receive/`, data);
+//   {
+//     "order_number": "ODR-KMWHGXE"
+// }
+
+export const sellerMarkTransit = (data) =>
+  api.post(`${baseUrl}/order/transit/`, data);
+
+//   {
+//     "order_number": "ODR-SJ4H9LA"
+// }
+
+/* hub apis */
+
 export const getHubDetails = (hub_id) =>
   api.get(`${baseUrl}/hub/dashboard/?hub_id=${hub_id}`);
 
 export const getAllHubs = () => api.get(`${baseUrl}/hub/all/`);
 
+export const receiveOrder = (data) => api.post(`${baseUrl}/hub/receive/`, data);
+
+export const transitBag = (data) => api.post(`${baseUrl}/bag/transit/`, data);
+
+export const markBagReceive = (data) =>
+  api.post(`${baseUrl}/bag/receive/`, data);
+
+export const markBagOfd = (data) => api.post(`${baseUrl}/bag/ofd/`, data);
+// {
+//   "bag_code": "BAG-QITPJ"
+// }
+
+export const orderDelivered = (data) =>
+  api.post(`${baseUrl}/order/delivered/`, data);
+
+//   {
+//     "order_number": "ODR-KMWHGXE"
+// }
+
 export default {
   getHubDetails,
   getAllHubs,
+  receiveOrder,
+  transitBag,
+  markBagReceive,
+  markBagOfd,
+  orderDelivered,
+  getOrderDetails,
+  sellerReceive,
+  sellerMarkTransit,
+  createOrder,
 };

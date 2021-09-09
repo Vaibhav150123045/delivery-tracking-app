@@ -38,7 +38,7 @@ const Hub = () => {
                   <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
                 }
                 title={
-                  <Link href={`/hub/order-receive`}>
+                  <Link href={`/hub/${item.id}`}>
                     <a> Hub id {item.id}</a>
                   </Link>
                 }
