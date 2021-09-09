@@ -3,6 +3,7 @@ import { useRouter, Link } from "next/router";
 import BagReceive from "../../components/hub/tables/BagReceive.js";
 import OrderReceive from "../../components/hub/tables/OrderReceive";
 import TransitBag from "../../components/hub/tables/TransitBag";
+import OfdTable from "../../components/hub/tables/OfdTable";
 import { Breadcrumb, Alert } from "antd";
 
 const HubPage = (props) => {
@@ -34,6 +35,11 @@ const HubPage = (props) => {
               Transit Bags
             </a>
           </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <a onClick={(e) => handleSelectTable(e, "ofd")}>
+              Off to Deliveries
+            </a>
+          </Breadcrumb.Item>
         </Breadcrumb>
       </div>
       {table === "receive_o" ? (
@@ -43,7 +49,7 @@ const HubPage = (props) => {
       ) : table === "transit_b" ? (
         <TransitBag />
       ) : (
-        <></>
+        <OfdTable bagId={id} />
       )}
     </div>
   );
