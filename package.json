@@ -16,6 +16,7 @@
     "ag-grid-community": "^26.0.0",
     "ag-grid-react": "^26.0.0",
     "antd": "^4.16.13",
+    "axios": "^0.21.4",
     "babel-plugin-import": "^1.13.3",
     "less": "^4.1.1",
     "next": "11.1.2",
