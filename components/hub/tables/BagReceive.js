@@ -1,87 +1,77 @@
 import React, { useState } from "react";
 import { AgGridColumn, AgGridReact } from "ag-grid-react";
 import { Input, Button } from "antd";
-import SelectHub from "../../components/hub/SelectHub";
-
+import SelectHub from "../SelectHub";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
-import { getHubDetails } from "../api";
+import { getHubDetails } from "../../../pages/api";
 
-const App = () => {
+const hub_id = 7;
+
+const App = (props) => {
+  console.log("props", props);
+  const { bagId } = props;
   const [gridApi, setGridApi] = useState(null);
   const [columnApi, setColumnApi] = useState(null);
-  const [hub, setHub] = useState("8");
+
   const [tableData, setTableData] = useState([]);
+
   const handleGridReady = (params) => {
     setGridApi(params.api);
     setColumnApi(params.columnApi);
-    // const statusFilter = params.api.getFilterInstance("status");
-    // statusFilter.setModel({
-    //   type: "contains",
-    //   filter: "pending",
-    // });
-    // params.api.onFilterChanged();
 
     /* fetch data here to populate tables */
-    getHubDetails("7")
+
+    getHubDetails(bagId)
       .then((res) => {
         const { data = {}, message = "" } = res.data;
         console.log("data", data);
 
-        const orders_to_be_received = data.orders_to_be_received;
-        params.api.applyTransaction({ add: orders_to_be_received });
+        const bags_to_be_received = data.bags_to_be_received;
+        params.api.applyTransaction({ add: bags_to_be_received });
       })
       .catch((err) => console.log("err", err));
   };
 
-  next_destination: "Adugodi Hub";
-  order_number: "ODR-2O43OML";
-  order_status: "New";
-  partner_id: null;
-  partner_name: null;
-  vehicle_numbers: null;
-  seller_name: "Tyagi Textiles";
-  society_name: "Mavalli";
-
   const columnDefs = [
     {
-      headerName: "Next destination",
-      field: "next_destination",
+      headerName: "bag type",
+      field: "bag_type",
       width: 150,
       checkboxSelection: true,
       headerCheckboxSelection: true,
     },
     {
-      headerName: "Order number",
-      field: "order_number",
+      headerName: "bad code",
+      field: "code",
       width: 150,
       sortable: true,
       // filter: "agTextColumnFilter",
     },
     {
-      headerName: "Order status",
-      field: "order_status",
+      headerName: "current bin",
+      field: "current_bin",
       width: 150,
       filter: "agSetColumnFilter",
     },
 
     {
-      headerName: "seller name",
-      field: "seller_name",
+      headerName: "current hub",
+      field: "current_hub_id",
       width: 150,
       sortable: true,
-      //   comparator: (valueA, valueB) => {
-      //     const a = new Date(valueA).getTime();
-      //     const b = new Date(valueB).getTime();
-      //     if (a === b) return 0;
-      //     else if (a > b) return 1;
-      //     else return -1;
-      //   },
+      comparator: (valueA, valueB) => {
+        const a = new Date(valueA).getTime();
+        const b = new Date(valueB).getTime();
+        if (a === b) return 0;
+        else if (a > b) return 1;
+        else return -1;
+      },
       filter: "agDateColumnFilter",
     },
     {
-      headerName: "Society name",
-      field: "society_name",
+      headerName: "Destination",
+      field: "destination_name",
       width: 150,
       // filter: "agTextColumnFilter",
     },
@@ -97,17 +87,6 @@ const App = () => {
     {
       headerName: "weight",
       field: "weight",
-      width: "150",
-    },
-
-    {
-      headerName: "Partner id",
-      field: "partner_id",
-      width: "150",
-    },
-    {
-      headerName: "partner name",
-      field: "partner_name",
       width: "150",
     },
     {
@@ -153,9 +132,12 @@ const App = () => {
     <body
       style={{ backgroundColor: "white", height: "100vh", padding: "15px" }}
     >
-      <SelectHub current_hub={hub} onChangeHub={(id) => setHub(id)} />
+      <SelectHub
+        current_hub={"Hub1"}
+        // onChangeHub={(id) => setHub(id)}
+      />
       <div style={{ padding: "20px" }}>
-        <h1>Orders to receive</h1>
+        <h1>bags to receive</h1>
       </div>
       <div style={{ color: "black", width: "500px", paddingLeft: "15px" }}>
         <Input
@@ -169,7 +151,6 @@ const App = () => {
       <div
         style={{
           display: "flex",
-          // minHeight: "100vh",
           justifyContent: "center",
           alignItems: "center",
           marginTop: "10px",
@@ -208,24 +189,21 @@ const App = () => {
 export default App;
 
 const RowButton = (props) => {
-  const { order_status } = props.node.data;
-  if (order_status.trim() !== "New")
-    return (
-      <div style={{ textAlign: "center" }}>
-        <Button
-          type="primary"
-          style={{ textAlign: "center" }}
-          onClick={() => {
-            console.log("shshs");
-            let rowData = props.node.data;
-            console.log("row data", rowData);
-          }}
-        >
-          receive
-        </Button>
-      </div>
-    );
-  else return <></>;
+  return (
+    <div style={{ textAlign: "center" }}>
+      <Button
+        type="primary"
+        style={{ textAlign: "center" }}
+        onClick={() => {
+          console.log("shshs");
+          let rowData = props.node.data;
+          console.log("row data", rowData);
+        }}
+      >
+        receive
+      </Button>
+    </div>
+  );
 };
 
 const statusList = [

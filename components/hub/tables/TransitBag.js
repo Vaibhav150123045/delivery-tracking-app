@@ -1,39 +1,28 @@
 import React, { useState } from "react";
 import { AgGridColumn, AgGridReact } from "ag-grid-react";
 import { Input, Button } from "antd";
-import SelectHub from "../../components/hub/SelectHub";
-
+import SelectHub from "../SelectHub";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
-import { getHubDetails } from "../api";
+import { getHubDetails } from "../../../pages/api";
 
-const hub_id = 7;
-
-const App = () => {
+const App = (props) => {
+  const { bagId } = props;
   const [gridApi, setGridApi] = useState(null);
   const [columnApi, setColumnApi] = useState(null);
-  const [hub, setHub] = useState(hub_id);
   const [tableData, setTableData] = useState([]);
-
   const handleGridReady = (params) => {
     setGridApi(params.api);
     setColumnApi(params.columnApi);
-    // const statusFilter = params.api.getFilterInstance("status");
-    // statusFilter.setModel({
-    //   type: "contains",
-    //   filter: "pending",
-    // });
-    // params.api.onFilterChanged();
 
     /* fetch data here to populate tables */
 
-    getHubDetails(hub_id)
+    getHubDetails(bagId)
       .then((res) => {
         const { data = {}, message = "" } = res.data;
         console.log("data", data);
-
-        const bags_to_be_received = data.bags_to_be_received;
-        params.api.applyTransaction({ add: bags_to_be_received });
+        const bags_to_transit = data.bags_to_transit;
+        params.api.applyTransaction({ add: bags_to_transit });
       })
       .catch((err) => console.log("err", err));
   };
@@ -137,9 +126,9 @@ const App = () => {
     <body
       style={{ backgroundColor: "white", height: "100vh", padding: "15px" }}
     >
-      <SelectHub current_hub={hub} onChangeHub={(id) => setHub(id)} />
+      <SelectHub current_hub={'Hub1'} onChangeHub={(id) => setHub(id)} />
       <div style={{ padding: "20px" }}>
-        <h1>bags to receive</h1>
+        <h1>Bags to transit</h1>
       </div>
       <div style={{ color: "black", width: "500px", paddingLeft: "15px" }}>
         <Input
