@@ -21,9 +21,8 @@ function Login() {
         router.push("/customer");
         break;
       case userRoles.HI:
-        router.push("/hubIncharge");
+        router.push("/hub");
         break;
-
       case userRoles.SR:
         router.push("/seller");
         break;
