@@ -1,32 +1,25 @@
 import "antd/dist/antd.css";
-import { Pagination } from "antd";
 import {
-  SearchOutlined,
   AlignLeftOutlined,
   CaretDownOutlined,
-  RightOutlined,
+  RightOutlined
 } from "@ant-design/icons";
 import { Menu, Dropdown, Button, Space } from "antd";
 import { useRouter } from "next/router";
-import { OmitProps } from "antd/lib/transfer/ListBody";
+
 
 function Customer() {
-
-  const router = useRouter();
-
     return (
-      <div style={{backgroundColor: "lighblue"}}>
-      <body
+      <div 
       style={{
-        backgroundColor: "lighblue",
+        background: "lighblue",
         height: "100vh",
         width: "100vw",
         margin: 0,
         paddingTop: "25px",
         paddingLeft: 0,
       }}
-    >
-      <div>
+      >
       <div style={{display: "flex", alignItems: "center" }}>
           <div>
             <AlignLeftOutlined
@@ -49,8 +42,8 @@ function Customer() {
             paddingBottom: "5px",
             borderRadius: "4px",
             paddingLeft: "15px",
+            marginRight: "15px",
             // maxWidth: "59%",
-            width: "328px",
             marginLeft: "15px",
             marginTop: "20px",
             boxShadow:
@@ -80,8 +73,6 @@ function Customer() {
         {[1, 2, 3, 4].map((el, i) => (
         <CardView key={i} />
       ))}
-      </div>
-    </body>
     </div>
     )
 }
@@ -89,6 +80,12 @@ function Customer() {
 export default Customer;
 
 function CardView() {
+
+  const router = useRouter();
+
+  function onTrackOrderClick() {
+    router.push("/customer/trackingDetails");
+  }
   
 
   return (
@@ -173,7 +170,7 @@ function CardView() {
         }}
       >
         
-        <Button 
+        <Button onClick = {onTrackOrderClick}
           style={{
            width: "100%",
            height: "100%",
