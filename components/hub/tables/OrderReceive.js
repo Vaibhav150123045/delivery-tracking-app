@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { AgGridColumn, AgGridReact } from "ag-grid-react";
-import { Input, Button } from "antd";
+import { Input, Button, message, Space } from "antd";
 import SelectHub from "../SelectHub";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
-import { getHubDetails } from "../../../pages/api";
+import { getHubDetails, receiveOrder } from "../../../pages/api";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const App = (props) => {
-  const { bagId } = props;
+  const { hubId } = props;
   const [gridApi, setGridApi] = useState(null);
   const [columnApi, setColumnApi] = useState(null);
   const [tableData, setTableData] = useState([]);
@@ -16,7 +17,7 @@ const App = (props) => {
     setColumnApi(params.columnApi);
 
     /* fetch data here to populate tables */
-    getHubDetails(bagId)
+    getHubDetails(hubId)
       .then((res) => {
         const { data = {}, message = "" } = res.data;
         console.log("data", data);
@@ -181,6 +182,21 @@ export default App;
 
 const RowButton = (props) => {
   const { order_status } = props.node.data;
+  const [loading, setLoading] = useState(false);
+
+  const markOrderReceive = async (payload) => {
+    try {
+      const data = await receiveOrder(payload);
+      console.log("receivei order data", data);
+      setLoading(false);
+      message.success("Order marked received");
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+      message.error("order not marked received");
+    }
+  };
+
   if (order_status.trim() !== "New")
     return (
       <div style={{ textAlign: "center" }}>
@@ -190,10 +206,17 @@ const RowButton = (props) => {
           onClick={() => {
             console.log("shshs");
             let rowData = props.node.data;
-            console.log("row data", rowData);
+            const { order_number } = rowData;
+            const payload = {
+              order_number,
+            };
+            console.log("payload", payload);
+            setLoading(true);
+            markOrderReceive(payload);
           }}
         >
           receive
+          {loading ? <LoadingOutlined /> : <></>}
         </Button>
       </div>
     );

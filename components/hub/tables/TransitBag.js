@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { AgGridColumn, AgGridReact } from "ag-grid-react";
-import { Input, Button } from "antd";
+import { Input, Button, message, Space } from "antd";
+
 import SelectHub from "../SelectHub";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
-import { getHubDetails } from "../../../pages/api";
+import { getHubDetails, transitBag, markBagReceive } from "../../../pages/api";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const App = (props) => {
   const { bagId } = props;
@@ -126,7 +128,7 @@ const App = (props) => {
     <body
       style={{ backgroundColor: "white", height: "100vh", padding: "15px" }}
     >
-      <SelectHub current_hub={'Hub1'} onChangeHub={(id) => setHub(id)} />
+      <SelectHub current_hub={"Hub1"} onChangeHub={(id) => setHub(id)} />
       <div style={{ padding: "20px" }}>
         <h1>Bags to transit</h1>
       </div>
@@ -181,18 +183,41 @@ const App = (props) => {
 export default App;
 
 const RowButton = (props) => {
+  const [loading, setLoading] = useState(false);
+
+  const markBagTransit = async (payload) => {
+    try {
+      const data = await transitBag(payload);
+      console.log("transit bag data", data);
+      setLoading(false);
+      message.success("Bag marked transit");
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+      message.error("bag not marked transit");
+    }
+  };
+
   return (
     <div style={{ textAlign: "center" }}>
       <Button
         type="primary"
         style={{ textAlign: "center" }}
         onClick={() => {
-          console.log("shshs");
           let rowData = props.node.data;
           console.log("row data", rowData);
+          const { code } = rowData;
+          const payload = {
+            bag_code: code,
+            vehicle_number: "KA36ZU6537",
+          };
+          console.log("payload", payload);
+          setLoading(true);
+          markBagTransit(payload);
         }}
       >
-        receive
+        mark transit
+        {loading ? <LoadingOutlined /> : <></>}
       </Button>
     </div>
   );

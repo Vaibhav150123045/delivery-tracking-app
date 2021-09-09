@@ -16,11 +16,11 @@ const HubPage = (props) => {
   };
   return (
     <div style={{ padding: "30px" }}>
-      <h1>Bag id {id}</h1>
+      <h1>Hub id {id}</h1>
       <div style={{ paddingLeft: "30px" }}>
         <Breadcrumb>
           <Breadcrumb.Item>
-            <a onClick={(e) => handleSelectTable("receive_o")}>
+            <a onClick={(e) => handleSelectTable(e, "receive_o")}>
               Receive orders
             </a>
           </Breadcrumb.Item>
@@ -43,13 +43,13 @@ const HubPage = (props) => {
         </Breadcrumb>
       </div>
       {table === "receive_o" ? (
-        <OrderReceive bagId={id} />
+        <OrderReceive hubId={id} />
       ) : table === "receive_b" ? (
-        <BagReceive bagId={id} />
+        <BagReceive hubId={id} />
       ) : table === "transit_b" ? (
-        <TransitBag />
+        <TransitBag hubId={id} />
       ) : (
-        <OfdTable bagId={id} />
+        <OfdTable hubId={id} />
       )}
     </div>
   );

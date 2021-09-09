@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import { AgGridColumn, AgGridReact } from "ag-grid-react";
-import { Input, Button } from "antd";
+import { Input, Button, message } from "antd";
 import SelectHub from "../SelectHub";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
-import { getHubDetails } from "../../../pages/api";
+import { getHubDetails, markBagReceive } from "../../../pages/api";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const hub_id = 7;
 
 const App = (props) => {
   console.log("props", props);
-  const { bagId } = props;
+  const { hubId } = props;
   const [gridApi, setGridApi] = useState(null);
   const [columnApi, setColumnApi] = useState(null);
 
@@ -22,7 +23,7 @@ const App = (props) => {
 
     /* fetch data here to populate tables */
 
-    getHubDetails(bagId)
+    getHubDetails(hubId)
       .then((res) => {
         const { data = {}, message = "" } = res.data;
         console.log("data", data);
@@ -80,6 +81,12 @@ const App = (props) => {
       field: "origin_name",
     },
     {
+      headerName: "Order status",
+      field: "order_status",
+      width: 150,
+    //   filter: "agSetColumnFilter",
+    },
+    {
       headerName: "Vehicle numbers",
       field: "vehicle_numbers",
       widht: "150",
@@ -93,6 +100,9 @@ const App = (props) => {
       headerName: "perform action",
       field: "action",
       cellRenderer: "RowButton",
+      cellRendererParams: {
+        hubId,
+      },
       filter: false,
       floatingFilter: false,
     },
@@ -189,18 +199,44 @@ const App = (props) => {
 export default App;
 
 const RowButton = (props) => {
+  const [loading, setLoading] = useState(false);
+
+  const bagReceive = async (payload) => {
+    try {
+      const data = await markBagReceive(payload);
+      console.log("transit bag data", data);
+      setLoading(false);
+      message.success("Bag marked received");
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+      message.error("bag not marked received");
+    }
+  };
+
   return (
     <div style={{ textAlign: "center" }}>
       <Button
         type="primary"
         style={{ textAlign: "center" }}
         onClick={() => {
-          console.log("shshs");
           let rowData = props.node.data;
+          const { hubId } = props;
           console.log("row data", rowData);
+          const { code } = rowData;
+
+          const payload = {
+            bag_code: code,
+            vehicle_number: "KA36ZU6537",
+            hub_id: hubId,
+          };
+          console.log("payload", payload);
+          setLoading(true);
+          bagReceive(payload);
         }}
       >
         receive
+        {loading ? <LoadingOutlined /> : <></>}
       </Button>
     </div>
   );
