@@ -89,6 +89,9 @@ const App = (props) => {
       headerName: "perform action",
       field: "action",
       cellRenderer: "RowButton",
+      cellRendererParams: {
+        hubId,
+      },
       filter: false,
       floatingFilter: false,
     },

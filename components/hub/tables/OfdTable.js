@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { AgGridColumn, AgGridReact } from "ag-grid-react";
-import { Input, Button } from "antd";
+import { Input, Button, message, Space } from "antd";
 import SelectHub from "../SelectHub";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
-import { getHubDetails } from "../../../pages/api";
+import { getHubDetails, markBagOfd } from "../../../pages/api";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const App = (props) => {
   const { hubId } = props;
@@ -187,18 +188,37 @@ const App = (props) => {
 export default App;
 
 const RowButton = (props) => {
+  const [loading, setLoading] = useState(false);
+  const handleOfd = async (payload) => {
+    try {
+      const data = await markBagOfd(payload);
+      console.log("receivei order data", data);
+      setLoading(false);
+      message.success("Order off to delivery");
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+      message.error("some error");
+    }
+  };
   return (
     <div style={{ textAlign: "center" }}>
       <Button
         type="primary"
         style={{ textAlign: "center" }}
         onClick={() => {
-          console.log("shshs");
           let rowData = props.node.data;
           console.log("row data", rowData);
+          const { code } = rowData;
+          const payload = {
+            bag_code: code,
+          };
+          //   console.log("payload", payload);
+          setLoading(true);
+          handleOfd(payload);
         }}
       >
-        receive
+        off to delivery
       </Button>
     </div>
   );
