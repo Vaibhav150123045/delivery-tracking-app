@@ -2,7 +2,8 @@
 
 import axios from "axios";
 // const baseUrl = "https://ba41-103-138-22-2.ngrok.io/single-day-delivery";
-const baseUrl = "http://4091-103-138-22-2.ngrok.io/single-day-delivery";
+const baseUrl =
+  "http://ec2-3-144-21-198.us-east-2.compute.amazonaws.com:8080/single-day-delivery";
 
 export function handler(req, res) {
   res.status(200).json({ name: "John Doe" });
@@ -46,7 +47,12 @@ export const createOrder = (data) =>
 
 /* seller apis */
 export const getOrderDetails = (order_number) =>
-  api.get(`${baseUrl}/seller/orders/?order_number=${order_number}`);
+
+  api.get(`${baseUrl}/seller/receive/?order_number=${order_number}`);
+
+  export const getOrderBySocietyDetails = (society_id) =>
+
+  api.get(`${baseUrl}/order_society/?society_id=${society_id}`);
 
 export const sellerReceive = (data) =>
   api.post(`${baseUrl}/seller/receive/`, data);
@@ -86,6 +92,10 @@ export const orderDelivered = (data) =>
 //   {
 //     "order_number": "ODR-KMWHGXE"
 // }
+
+export const getTrackingHistory = (order_id) =>
+
+  api.get(`${baseUrl}/tracking/?order_number=${order_id}`);
 
 export default {
   getHubDetails,
