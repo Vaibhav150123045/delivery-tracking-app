@@ -197,7 +197,7 @@ const RowButton = (props) => {
     }
   };
 
-  if (order_status.trim() !== "New")
+  if (order_status.trim() !== "New" && order_status.trim()!=="Seller Received Order")
     return (
       <div style={{ textAlign: "center" }}>
         <Button

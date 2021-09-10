@@ -9,7 +9,7 @@ import { getHubDetails, transitBag, markBagReceive } from "../../../pages/api";
 import { LoadingOutlined } from "@ant-design/icons";
 
 const App = (props) => {
-  const { bagId } = props;
+  const { hubId } = props;
   const [gridApi, setGridApi] = useState(null);
   const [columnApi, setColumnApi] = useState(null);
   const [tableData, setTableData] = useState([]);
@@ -19,7 +19,7 @@ const App = (props) => {
 
     /* fetch data here to populate tables */
 
-    getHubDetails(bagId)
+    getHubDetails(hubId)
       .then((res) => {
         const { data = {}, message = "" } = res.data;
         console.log("data", data);
