@@ -175,11 +175,19 @@ function trackingDetails() {
                     <p>{el.order_status}</p>
                     <p>{convertToReadable(el.updated)}</p>
                     </Timeline.Item>
-                    : 
-                    <Timeline.Item color="grey"  dot={ el.order_status === "New" ? <CheckOutlined style={{fontSize: "24px", color: "green"}} /> : <ClockCircleOutlined />} >
-                    <p>Order Placed</p>
-                    <p>{convertToReadable(el.updated)}</p>
-                    </Timeline.Item>
+                    : (el.order_status === "New"  ? 
+                      <Timeline.Item color="grey"  dot={ el.order_status === "New" ? <CheckOutlined style={{fontSize: "24px", color: "green"}} /> : <ClockCircleOutlined />} >
+                        <p>Order Placed</p>
+                        <p>{convertToReadable(el.updated)}</p>
+                      </Timeline.Item>
+                      : 
+                      <Timeline.Item color="grey"  dot={ el.order_status === "New" ? <CheckOutlined style={{fontSize: "24px", color: "green"}} /> : <ClockCircleOutlined />} >
+                        <p style={{fontSize: "18px"}}>{el.order_status}</p>
+                        <p>{convertToReadable(el.updated)}</p>
+                      </Timeline.Item>
+
+                    )
+                    
                 )
             ))}
   </Timeline>

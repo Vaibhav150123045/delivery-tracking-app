@@ -19,7 +19,7 @@ function Customer() {
 
   const router = useRouter();
   useEffect(() => {
-    getOrderBySocietyDetails("468")
+    getOrderBySocietyDetails("467")
       .then((res) => {
         console.log("Orders for Society", res);
         setFetching(false);
