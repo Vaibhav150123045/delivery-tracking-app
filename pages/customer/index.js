@@ -6,9 +6,13 @@ import {
 } from "@ant-design/icons";
 import { Menu, Dropdown, Button, Space } from "antd";
 import { useRouter } from "next/router";
+import { customerOrders } from '../api/mock_responses/customerOrders';
 
 
 function Customer() {
+
+  const orders = customerOrders.data;
+  
     return (
       <div 
       style={{
@@ -70,8 +74,8 @@ function Customer() {
           </div>
         </div>
       </Dropdown>
-        {[1, 2, 3, 4].map((el, i) => (
-        <CardView key={i} />
+        {orders.map((el, i) => (
+        <CardView key={i} element={el}/>
       ))}
     </div>
     )
@@ -79,10 +83,10 @@ function Customer() {
 
 export default Customer;
 
-function CardView() {
+function CardView(key, element) {
 
   const router = useRouter();
-
+  console.log(key.element.order_number, "Pause2");
   function onTrackOrderClick() {
     router.push("/customer/trackingDetails");
   }
@@ -130,7 +134,7 @@ function CardView() {
             opacity: 0.7,
           }}
         >
-          Sugar, RIce & 10 more items
+          <span style={{ fontWeight: "bold", opacity: 1 }}> Order Number: </span>{key.element.order_number}
         </p>
         <p
           style={{
@@ -141,8 +145,7 @@ function CardView() {
             opacity: 0.7,
           }}
         >
-          <span style={{ fontWeight: "bold", opacity: 1 }}> ₹400</span> to be
-          Received{" "}
+          <span style={{ fontWeight: "bold", opacity: 1 }}> Society: </span>{key.element.society_name}
         </p>
         <p
           style={{
@@ -153,9 +156,29 @@ function CardView() {
             opacity: 0.7,
           }}
         >
-          <span style={{ fontWeight: "bold", opacity: 1 }}> 20%</span>
-          {"  "}
-          Discount Applied{" "}
+          <span style={{ fontWeight: "bold", opacity: 1 }}> Seller Name: </span>{key.element.seller_name}
+        </p>
+        <p
+          style={{
+            color: "#1D1E1F",
+            opacity: 0.7,
+            fontSize: "12px",
+            lineHeight: "16px",
+            opacity: 0.7,
+          }}
+        >
+          <span style={{ fontWeight: "bold", opacity: 1 }}> Society: </span>{key.element.society_name}
+        </p>
+        <p
+          style={{
+            color: "#1D1E1F",
+            opacity: 0.7,
+            fontSize: "12px",
+            lineHeight: "16px",
+            opacity: 0.7,
+          }}
+        >
+          <span style={{ fontWeight: "bold", opacity: 1 }}> Current Tracking Status: </span>{key.element.order_status}
         </p>
       </div>
       <div
