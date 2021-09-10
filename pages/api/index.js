@@ -45,8 +45,8 @@ export const createOrder = (data) =>
 // }
 
 /* seller apis */
-export const getOrderDetails = (order_number) =>
-  api.get(`${baseUrl}/seller/orders/?order_number=${order_number}`);
+export const getAllSellerOrders = (seller_shop_id) =>
+  api.get(`${baseUrl}/seller/orders/?seller_shop_id=${seller_shop_id}`);
 
 export const sellerReceive = (data) =>
   api.post(`${baseUrl}/seller/receive/`, data);
@@ -95,7 +95,7 @@ export default {
   markBagReceive,
   markBagOfd,
   orderDelivered,
-  getOrderDetails,
+  getAllSellerOrders,
   sellerReceive,
   sellerMarkTransit,
   createOrder,
