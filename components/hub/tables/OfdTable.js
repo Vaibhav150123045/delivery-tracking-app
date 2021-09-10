@@ -23,7 +23,20 @@ const App = (props) => {
         const { data = {}, message = "" } = res.data;
         console.log("data", data);
         const bags_to_ofd = data.bags_to_ofd;
-        params.api.applyTransaction({ add: bags_to_ofd });
+        setTableData(bags_to_ofd);
+        // params.api.applyTransaction({ add: bags_to_ofd });
+      })
+      .catch((err) => console.log("err", err));
+  };
+
+  const refreshControl = () => {
+    console.log("called");
+    getHubDetails(hubId)
+      .then((res) => {
+        const { data = {}, message = "" } = res.data;
+        console.log("data", data);
+        const bags_to_ofd = data.bags_to_ofd;
+        setTableData(bags_to_ofd);
       })
       .catch((err) => console.log("err", err));
   };
@@ -44,13 +57,13 @@ const App = (props) => {
       // filter: "agTextColumnFilter",
     },
     {
-      headerName: "bad code",
+      headerName: "order/bag status",
       field: "status",
       width: 150,
       sortable: true,
     },
     {
-      headerName: "current bin",
+      headerName: "Next destination",
       field: "current_bin",
       width: 150,
       filter: "agSetColumnFilter",
@@ -61,14 +74,6 @@ const App = (props) => {
       field: "current_hub_id",
       width: 150,
       sortable: true,
-      comparator: (valueA, valueB) => {
-        const a = new Date(valueA).getTime();
-        const b = new Date(valueB).getTime();
-        if (a === b) return 0;
-        else if (a > b) return 1;
-        else return -1;
-      },
-      filter: "agDateColumnFilter",
     },
     {
       headerName: "Destination",
@@ -91,11 +96,15 @@ const App = (props) => {
       width: "150",
     },
     {
-      headerName: "perform action",
+      headerName: "",
       field: "action",
       cellRenderer: "RowButton",
       filter: false,
       floatingFilter: false,
+      cellRendererParams: {
+        hubId,
+        refreshControl,
+      },
     },
   ];
 
@@ -130,14 +139,11 @@ const App = (props) => {
   };
 
   return (
-    <body
-      style={{ backgroundColor: "white", height: "100vh", padding: "15px" }}
-    >
-      <SelectHub current_hub={"Hub1"} onChangeHub={(id) => setHub(id)} />
-      <div style={{ padding: "20px" }}>
+    <>
+      <div style={{ paddingLeft: "30px", paddingTop: "15px" }}>
         <h1>Bags to Off to Delivery</h1>
       </div>
-      <div style={{ color: "black", width: "500px", paddingLeft: "15px" }}>
+      <div style={{ color: "black", width: "500px", paddingLeft: "30px" }}>
         <Input
           type="search"
           placeholder="search an order"
@@ -153,12 +159,12 @@ const App = (props) => {
           justifyContent: "center",
           alignItems: "center",
           marginTop: "10px",
-          padding: "20px",
+          padding: "30px",
         }}
       >
         <div className="ag-theme-alpine" style={{ height: 450, width: "100%" }}>
           <AgGridReact
-            // rowData={rowData}
+            rowData={tableData}
             columnDefs={columnDefs}
             onGridReady={handleGridReady}
             postSort={() => console.log("sorting complete")}
@@ -181,13 +187,14 @@ const App = (props) => {
           />
         </div>
       </div>
-    </body>
+    </>
   );
 };
 
 export default App;
 
 const RowButton = (props) => {
+  const { refreshControl = () => {} } = props;
   const [loading, setLoading] = useState(false);
   const handleOfd = async (payload) => {
     try {
@@ -195,6 +202,7 @@ const RowButton = (props) => {
       console.log("receivei order data", data);
       setLoading(false);
       message.success("Order off to delivery");
+      refreshControl();
     } catch (err) {
       console.log(err);
       setLoading(false);

@@ -23,7 +23,20 @@ const App = (props) => {
         console.log("data", data);
 
         const orders_to_be_received = data.orders_to_be_received;
-        params.api.applyTransaction({ add: orders_to_be_received });
+        setTableData(orders_to_be_received);
+        // params.api.applyTransaction({ add: orders_to_be_received });
+      })
+      .catch((err) => console.log("err", err));
+  };
+
+  const refreshControl = () => {
+    console.log("called");
+    getHubDetails(hubId)
+      .then((res) => {
+        const { data = {}, message = "" } = res.data;
+        console.log("data", data);
+        const orders_to_be_received = data.orders_to_be_received;
+        setTableData(orders_to_be_received);
       })
       .catch((err) => console.log("err", err));
   };
@@ -55,7 +68,6 @@ const App = (props) => {
       field: "seller_name",
       width: 150,
       sortable: true,
-      filter: "agDateColumnFilter",
     },
     {
       headerName: "Society name",
@@ -89,9 +101,13 @@ const App = (props) => {
       width: "150",
     },
     {
-      headerName: "perform action",
+      headerName: "",
       field: "action",
       cellRenderer: "RowButton",
+      cellRendererParams: {
+        hubId,
+        refreshControl,
+      },
       filter: false,
       floatingFilter: false,
     },
@@ -128,14 +144,11 @@ const App = (props) => {
   };
 
   return (
-    <body
-      style={{ backgroundColor: "white", height: "100vh", padding: "15px" }}
-    >
-      <SelectHub current_hub={"Hub1"} onChangeHub={(id) => setHub(id)} />
-      <div style={{ padding: "20px" }}>
+    <>
+      <div style={{ paddingLeft: "30px", paddingTop: "15px" }}>
         <h1>Orders to receive</h1>
       </div>
-      <div style={{ color: "black", width: "500px", paddingLeft: "15px" }}>
+      <div style={{ color: "black", width: "500px", paddingLeft: "30px" }}>
         <Input
           type="search"
           placeholder="search an order"
@@ -151,12 +164,12 @@ const App = (props) => {
           justifyContent: "center",
           alignItems: "center",
           marginTop: "10px",
-          padding: "20px",
+          padding: "30px",
         }}
       >
         <div className="ag-theme-alpine" style={{ height: 450, width: "100%" }}>
           <AgGridReact
-            // rowData={rowData}
+            rowData={tableData}
             columnDefs={columnDefs}
             onGridReady={handleGridReady}
             postSort={() => console.log("sorting complete")}
@@ -174,13 +187,14 @@ const App = (props) => {
           />
         </div>
       </div>
-    </body>
+    </>
   );
 };
 
 export default App;
 
 const RowButton = (props) => {
+  const { refreshControl = () => {} } = props;
   const { order_status } = props.node.data;
   const [loading, setLoading] = useState(false);
 
@@ -190,6 +204,7 @@ const RowButton = (props) => {
       console.log("receivei order data", data);
       setLoading(false);
       message.success("Order marked received");
+      refreshControl();
     } catch (err) {
       console.log(err);
       setLoading(false);
@@ -197,7 +212,10 @@ const RowButton = (props) => {
     }
   };
 
-  if (order_status.trim() !== "New" && order_status.trim()!=="Seller Received Order")
+  if (
+    order_status.trim() !== "New" &&
+    order_status.trim() !== "Seller Received Order"
+  )
     return (
       <div style={{ textAlign: "center" }}>
         <Button
