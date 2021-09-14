@@ -1,12 +1,12 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { userLoginDetails, userRoles } from "./constants";
-import Customer from "./customer-journey/customer";
-import Seller from "./seller-journey/seller";
-import HubIncharge from "./hub-incharge-journey/hubIncharge";
+import styles from "../styles/Login.module.css";
 import { useRouter } from "next/router";
+import Header from './header'
 
-export default function Login() {
+
+function Login() {
   const {
     register,
     handleSubmit,
@@ -18,17 +18,14 @@ export default function Login() {
   const routeToCorrectJourney = (userRole, userID) => {
     switch (userRole) {
       case userRoles.CR:
-        // return <Customer />;
-        router.push("/customer-journey/customer");
+        router.push("/customer");
         break;
       case userRoles.HI:
-        // return <HubIncharge />;
-        router.push("/hub-incharge-journey/hubIncharge");
+        router.push("/hubIncharge");
         break;
 
       case userRoles.SR:
-        // return <Seller />;
-        router.push("/seller-journey/seller");
+        router.push("/seller");
         break;
 
       default:
@@ -61,9 +58,10 @@ export default function Login() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div>
-        <input
+    <div class={styles.body}>
+      <Header />
+    <form class={styles.form} onSubmit={handleSubmit(onSubmit)}>
+        <input class={styles.input}
           {...register("phoneNumber", {
             required: true,
             maxLength: 10,
@@ -72,22 +70,24 @@ export default function Login() {
           placeholder="Phone Number"
         />
         {errors.phoneNumber && errors.phoneNumber.type === "required" && (
-          <p>Phone number is required.</p>
+          <p class={styles.p}>Phone number is required.</p>
         )}
         {errors.phoneNumber && errors.phoneNumber.type === "maxLength" && (
-          <p>Phone nuber should be 10 digit long.</p>
+          <p class={styles.p}>Phone number should be 10 digit long.</p>
         )}
         {errors.phoneNumber && errors.phoneNumber.type === "minLength" && (
-          <p>Phone nuber should be 10 digit long.</p>
+          <p class={styles.p}>Phone number should be 10 digit long.</p>
         )}
-        <input
+        <input class={styles.input}
           type="password"
           {...register("password", { required: true })}
           placeholder="Password"
         />
         {errors.password && <p>Password is required.</p>}
-        <input type="submit" />
-      </div>
+        <input class={styles.input} type="submit" />
     </form>
+    </div>
   );
 }
+
+export default Login;
