@@ -18,7 +18,7 @@ function Login() {
   const routeToCorrectJourney = (userRole, userID) => {
     switch (userRole) {
       case userRoles.CR:
-        router.push("/customer");
+        router.push({pathname: "/customer"});
         break;
       case userRoles.HI:
         router.push("/hub");

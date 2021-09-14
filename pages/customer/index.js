@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import "antd/dist/antd.css";
 import {
   AlignLeftOutlined,
@@ -7,11 +8,30 @@ import {
 import { Menu, Dropdown, Button, Space } from "antd";
 import { useRouter } from "next/router";
 import { customerOrders } from '../api/mock_responses/customerOrders';
+import { getOrderBySocietyDetails } from "../api/";
 
 
 function Customer() {
-
+  const [fetching, setFetching] = useState(true);
+  const [err, setErr] = useState(null);
+  const [societyOrders, setSocietyOrders] = useState([]);
   const orders = customerOrders.data;
+
+  const router = useRouter();
+  useEffect(() => {
+    getOrderBySocietyDetails("468")
+      .then((res) => {
+        console.log("Orders for Society", res);
+        setFetching(false);
+        setSocietyOrders(res.data.data);
+        setErr(null);
+      })
+      .catch((err) => {
+        console.log("err", err);
+        setFetching(false);
+        setErr(err);
+      });
+  }, (setFetching));
   
     return (
       <div 
@@ -74,7 +94,7 @@ function Customer() {
           </div>
         </div>
       </Dropdown>
-        {orders.map((el, i) => (
+        {societyOrders.map((el, i) => (
         <CardView key={i} element={el}/>
       ))}
     </div>
@@ -88,9 +108,10 @@ function CardView(key, element) {
   const router = useRouter();
   console.log(key.element.order_number, "Pause2");
   function onTrackOrderClick() {
-    router.push("/customer/trackingDetails");
+    const route = "/customer/trackingDetails" ;
+    router.push({pathname: route, query: { orderID: key.element.order_number }});
   }
-  
+
 
   return (
   <div
@@ -120,7 +141,7 @@ function CardView(key, element) {
           paddingBottom: "6px",
         }}
       >
-        <p style={{ fontWeight: "bold" }}>#1257</p>
+        <p style={{ fontWeight: "bold" }}>#{key.element.order_number}</p>
         <p style={{ color: "rgba(29, 30, 31, 0.7)" }}>20.00 - 20.30</p>
       </div>
 
@@ -135,17 +156,6 @@ function CardView(key, element) {
           }}
         >
           <span style={{ fontWeight: "bold", opacity: 1 }}> Order Number: </span>{key.element.order_number}
-        </p>
-        <p
-          style={{
-            color: "#1D1E1F",
-            opacity: 0.7,
-            fontSize: "12px",
-            lineHeight: "16px",
-            opacity: 0.7,
-          }}
-        >
-          <span style={{ fontWeight: "bold", opacity: 1 }}> Society: </span>{key.element.society_name}
         </p>
         <p
           style={{
