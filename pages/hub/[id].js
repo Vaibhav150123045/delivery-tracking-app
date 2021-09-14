@@ -5,7 +5,7 @@ import OrderReceive from "../../components/hub/tables/OrderReceive";
 import TransitBag from "../../components/hub/tables/TransitBag";
 import OfdTable from "../../components/hub/tables/OfdTable";
 import { getAllHubs } from "../api";
-import { Breadcrumb, Alert, Select } from "antd";
+import { Breadcrumb, Alert, Select, Button } from "antd";
 const { Option } = Select;
 
 const HubPage = (props) => {
@@ -70,6 +70,13 @@ const HubPage = (props) => {
               </Option>
             ))}
           </Select>
+
+          <Button
+            style={{ marginLeft: "15px" }}
+            // onClick={() => setFetching(true)}
+          >
+            refresh
+          </Button>
         </div>
         <div style={{ paddingLeft: "30px" }}>
           <Breadcrumb>

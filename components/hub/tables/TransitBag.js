@@ -216,7 +216,7 @@ const RowButton = (props) => {
           const { code } = rowData;
           const payload = {
             bag_code: code,
-            vehicle_number: "KA62EM2760",
+            vehicle_number: "KA92QO3259",
           };
           console.log("payload", payload);
           setLoading(true);

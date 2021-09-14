@@ -86,7 +86,7 @@ const App = (props) => {
     },
     {
       headerName: "Order status",
-      field: "order_status",
+      field: "status",
       width: 150,
       //   filter: "agSetColumnFilter",
     },
@@ -229,8 +229,8 @@ const RowButton = (props) => {
 
           const payload = {
             bag_code: code,
-            vehicle_number: "KA62EM2760",
-            hub_id: hubId,
+            vehicle_number: "KA92QO3259",
+            hub_id: +hubId,
           };
           console.log("payload", payload);
           setLoading(true);

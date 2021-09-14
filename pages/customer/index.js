@@ -3,13 +3,12 @@ import "antd/dist/antd.css";
 import {
   AlignLeftOutlined,
   CaretDownOutlined,
-  RightOutlined
+  RightOutlined,
 } from "@ant-design/icons";
-import { Menu, Dropdown, Button, Space } from "antd";
+import { Menu, Dropdown, Button, Space, Spin } from "antd";
 import { useRouter } from "next/router";
-import { customerOrders } from '../api/mock_responses/customerOrders';
+import { customerOrders } from "../api/mock_responses/customerOrders";
 import { getOrderBySocietyDetails } from "../api/";
-
 
 function Customer() {
   const [fetching, setFetching] = useState(true);
@@ -19,11 +18,16 @@ function Customer() {
 
   const router = useRouter();
   useEffect(() => {
-    getOrderBySocietyDetails("467")
+    getOrderBySocietyDetails("537")
       .then((res) => {
         console.log("Orders for Society", res);
         setFetching(false);
-        setSocietyOrders(res.data.data);
+        const list = res.data.data;
+        let descList = [];
+        for (let i = list.length - 1; i >= 0; i--) {
+          descList.push(list[i]);
+        }
+        setSocietyOrders(descList);
         setErr(null);
       })
       .catch((err) => {
@@ -31,10 +35,16 @@ function Customer() {
         setFetching(false);
         setErr(err);
       });
-  }, (setFetching));
-  
-    return (
-      <div 
+  }, setFetching);
+
+  // <Space size="middle">
+  //   <Spin size="small" />
+  //   <Spin />
+  //   <Spin size="large" />
+  // </Space>
+
+  return (
+    <div
       style={{
         background: "lighblue",
         height: "100vh",
@@ -43,22 +53,22 @@ function Customer() {
         paddingTop: "25px",
         paddingLeft: 0,
       }}
-      >
-      <div style={{display: "flex", alignItems: "center" }}>
-          <div>
-            <AlignLeftOutlined
-              style={{
-                color: "black",
-                marginRight: "12px",
-                fontSize: "20px",
-                marginBottom: "8px",
-                paddingLeft: "25px"
-              }}
-            />
-          </div>
-          <h2 style={{ color: "#000000" }}>My Orders</h2>
+    >
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <div>
+          <AlignLeftOutlined
+            style={{
+              color: "black",
+              marginRight: "12px",
+              fontSize: "20px",
+              marginBottom: "8px",
+              paddingLeft: "25px",
+            }}
+          />
         </div>
-        <Dropdown overlay={menu} placement="bottomCenter">
+        <h2 style={{ color: "#000000" }}>My Orders</h2>
+      </div>
+      <Dropdown overlay={menu} placement="bottomCenter">
         <div
           style={{
             backgroundColor: "#34A0CE",
@@ -94,133 +104,151 @@ function Customer() {
           </div>
         </div>
       </Dropdown>
-        {societyOrders.map((el, i) => (
-        <CardView key={i} element={el}/>
-      ))}
+      {fetching ? (
+        <div style={{ width: "100%", textAlign: "center", paddingTop:"30px" }}>
+          <Spin size="large" />
+        </div>
+      ) : (
+        societyOrders.map((el, i) => <CardView key={i} element={el} />)
+      )}
     </div>
-    )
+  );
 }
 
 export default Customer;
 
 function CardView(key, element) {
-
   const router = useRouter();
   console.log(key.element.order_number, "Pause2");
   function onTrackOrderClick() {
-    const route = "/customer/trackingDetails" ;
-    router.push({pathname: route, query: { orderID: key.element.order_number }});
+    const route = "/customer/trackingDetails";
+    router.push({
+      pathname: route,
+      query: { orderID: key.element.order_number },
+    });
   }
 
-
   return (
-  <div
-    style={{
-      width: "100%",
-      paddingLeft: "15px",
-      paddingRight: "15px",
-      paddingTop: "20px",
-    }}
-  >
     <div
       style={{
-        backgroundColor: "lightgrey",
-        borderRadius: "4px",
-        boxShadow:
-          "0px 0px 2px rgba(0, 0, 0, 0.12), 0px 2px 2px rgba(0, 0, 0, 0.12)",
+        width: "100%",
+        paddingLeft: "15px",
+        paddingRight: "15px",
+        paddingTop: "20px",
       }}
     >
       <div
         style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          paddingRight: "12px",
-          paddingLeft: "10px",
-          paddingTop: "10px",
-          paddingBottom: "6px",
+          backgroundColor: "lightgrey",
+          borderRadius: "4px",
+          boxShadow:
+            "0px 0px 2px rgba(0, 0, 0, 0.12), 0px 2px 2px rgba(0, 0, 0, 0.12)",
         }}
       >
-        <p style={{ fontWeight: "bold" }}>#{key.element.order_number}</p>
-        <p style={{ color: "rgba(29, 30, 31, 0.7)" }}>20.00 - 20.30</p>
-      </div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            paddingRight: "12px",
+            paddingLeft: "10px",
+            paddingTop: "10px",
+            paddingBottom: "6px",
+          }}
+        >
+          <p style={{ fontWeight: "bold" }}>#{key.element.order_number}</p>
+          <p style={{ color: "rgba(29, 30, 31, 0.7)" }}>20.00 - 20.30</p>
+        </div>
 
-      <div style={{ paddingLeft: "10px", paddingBottom: "6px" }}>
-        <p
+        <div style={{ paddingLeft: "10px", paddingBottom: "6px" }}>
+          <p
+            style={{
+              color: "#1D1E1F",
+              opacity: 0.7,
+              fontSize: "12px",
+              lineHeight: "16px",
+              opacity: 0.7,
+            }}
+          >
+            <span style={{ fontWeight: "bold", opacity: 1 }}>
+              {" "}
+              Order Number:{" "}
+            </span>
+            {key.element.order_number}
+          </p>
+          <p
+            style={{
+              color: "#1D1E1F",
+              opacity: 0.7,
+              fontSize: "12px",
+              lineHeight: "16px",
+              opacity: 0.7,
+            }}
+          >
+            <span style={{ fontWeight: "bold", opacity: 1 }}>
+              {" "}
+              Seller Name:{" "}
+            </span>
+            {key.element.seller_name}
+          </p>
+          <p
+            style={{
+              color: "#1D1E1F",
+              opacity: 0.7,
+              fontSize: "12px",
+              lineHeight: "16px",
+              opacity: 0.7,
+            }}
+          >
+            <span style={{ fontWeight: "bold", opacity: 1 }}> Society: </span>
+            {key.element.society_name}
+          </p>
+          <p
+            style={{
+              color: "#1D1E1F",
+              opacity: 0.7,
+              fontSize: "12px",
+              lineHeight: "16px",
+              opacity: 0.7,
+            }}
+          >
+            <span style={{ fontWeight: "bold", opacity: 1 }}>
+              {" "}
+              Current Tracking Status:{" "}
+            </span>
+            {key.element.order_status}
+          </p>
+        </div>
+        <div
+          style={{ height: "1px", width: "100%", backgroundColor: "#DEDEDE" }}
+        />
+        <div
           style={{
-            color: "#1D1E1F",
-            opacity: 0.7,
-            fontSize: "12px",
-            lineHeight: "16px",
-            opacity: 0.7,
+            backgroundColor: "#808080",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
-          <span style={{ fontWeight: "bold", opacity: 1 }}> Order Number: </span>{key.element.order_number}
-        </p>
-        <p
-          style={{
-            color: "#1D1E1F",
-            opacity: 0.7,
-            fontSize: "12px",
-            lineHeight: "16px",
-            opacity: 0.7,
-          }}
-        >
-          <span style={{ fontWeight: "bold", opacity: 1 }}> Seller Name: </span>{key.element.seller_name}
-        </p>
-        <p
-          style={{
-            color: "#1D1E1F",
-            opacity: 0.7,
-            fontSize: "12px",
-            lineHeight: "16px",
-            opacity: 0.7,
-          }}
-        >
-          <span style={{ fontWeight: "bold", opacity: 1 }}> Society: </span>{key.element.society_name}
-        </p>
-        <p
-          style={{
-            color: "#1D1E1F",
-            opacity: 0.7,
-            fontSize: "12px",
-            lineHeight: "16px",
-            opacity: 0.7,
-          }}
-        >
-          <span style={{ fontWeight: "bold", opacity: 1 }}> Current Tracking Status: </span>{key.element.order_status}
-        </p>
-      </div>
-      <div
-        style={{ height: "1px", width: "100%", backgroundColor: "#DEDEDE" }}
-      />
-      <div
-        style={{
-          backgroundColor: "#808080",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        
-        <Button onClick = {onTrackOrderClick}
-          style={{
-           width: "100%",
-           height: "100%",
-            backgroundColor: "#34A0CE",
-            fontSize: "18px",
-            //marginLeft: "5px",
-            // marginTop: "7px",
-          }}
-        >
-          Track Order
-          <RightOutlined/>
-        </Button>
+          <Button
+            onClick={onTrackOrderClick}
+            style={{
+              width: "100%",
+              height: "100%",
+              backgroundColor: "#34A0CE",
+              fontSize: "18px",
+              //marginLeft: "5px",
+              // marginTop: "7px",
+            }}
+          >
+            Track Order
+            <RightOutlined />
+          </Button>
+        </div>
       </div>
     </div>
-  </div>
-  )
-};
+  );
+}
 
 const menu = (
   <Menu>

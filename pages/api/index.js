@@ -47,12 +47,13 @@ export const createOrder = (data) =>
 
 /* seller apis */
 export const getOrderDetails = (order_number) =>
-
   api.get(`${baseUrl}/seller/receive/?order_number=${order_number}`);
 
-  export const getOrderBySocietyDetails = (society_id) =>
-
+export const getOrderBySocietyDetails = (society_id) =>
   api.get(`${baseUrl}/order_society/?society_id=${society_id}`);
+
+export const getAllSellerOrders = (shop_id) =>
+  api.get(`${baseUrl}/seller/orders/?seller_shop_id=${shop_id}`);
 
 export const sellerReceive = (data) =>
   api.post(`${baseUrl}/seller/receive/`, data);
@@ -94,7 +95,6 @@ export const orderDelivered = (data) =>
 // }
 
 export const getTrackingHistory = (order_id) =>
-
   api.get(`${baseUrl}/tracking/?order_number=${order_id}`);
 
 export default {
