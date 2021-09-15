@@ -3,7 +3,7 @@
 import axios from "axios";
 // const baseUrl = "https://ba41-103-138-22-2.ngrok.io/single-day-delivery";
 const baseUrl =
-  "https://ec2-3-144-21-198.us-east-2.compute.amazonaws.com:8080/single-day-delivery";
+  "http://ec2-3-144-21-198.us-east-2.compute.amazonaws.com:8080/single-day-delivery";
 
 export function handler(req, res) {
   res.status(200).json({ name: "John Doe" });
