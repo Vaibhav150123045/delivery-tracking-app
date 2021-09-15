@@ -1,6 +1,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { userLoginDetails, userRoles } from "./constants";
+import { userLoginDetails, userRoles } from "./api/constants";
 import styles from "../styles/Login.module.css";
 import { useRouter } from "next/router";
 import Header from './header'
