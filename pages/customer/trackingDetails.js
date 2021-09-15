@@ -12,7 +12,7 @@ import {
 import { getTrackingHistory, getOrderDetails } from "../api/";
 import { useRouter, withRouter } from "next/router";
 
-function trackingDetails() {
+const TrackingDetails = (props) => {
   const [fetching, setFetching] = useState(true);
   const [err, setErr] = useState(null);
   const [orderDetails, setOrderDetails] = useState([]);
@@ -21,7 +21,6 @@ function trackingDetails() {
 
   const { Panel } = Collapse;
   const router = useRouter();
-  console.log("Hey!", router.query.orderID);
 
   useEffect(() => {
     if (!router.isReady) {
@@ -279,6 +278,6 @@ function trackingDetails() {
       </div>
     </div>
   );
-}
+};
 
-export default withRouter(trackingDetails);
+export default TrackingDetails;

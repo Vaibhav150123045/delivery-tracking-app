@@ -35,7 +35,7 @@ function Customer() {
         setFetching(false);
         setErr(err);
       });
-  }, setFetching);
+  }, [setFetching]);
 
   // <Space size="middle">
   //   <Spin size="small" />

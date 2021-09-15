@@ -57,10 +57,10 @@ function Login() {
   };
 
   return (
-    <div class={styles.body}>
+    <div className={styles.body}>
       <Header />
-    <form class={styles.form} onSubmit={handleSubmit(onSubmit)}>
-        <input class={styles.input}
+    <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+        <input className={styles.input}
           {...register("phoneNumber", {
             required: true,
             maxLength: 10,
@@ -69,21 +69,21 @@ function Login() {
           placeholder="Phone Number"
         />
         {errors.phoneNumber && errors.phoneNumber.type === "required" && (
-          <p class={styles.p}>Phone number is required.</p>
+          <p className={styles.p}>Phone number is required.</p>
         )}
         {errors.phoneNumber && errors.phoneNumber.type === "maxLength" && (
-          <p class={styles.p}>Phone number should be 10 digit long.</p>
+          <p className={styles.p}>Phone number should be 10 digit long.</p>
         )}
         {errors.phoneNumber && errors.phoneNumber.type === "minLength" && (
-          <p class={styles.p}>Phone number should be 10 digit long.</p>
+          <p className={styles.p}>Phone number should be 10 digit long.</p>
         )}
-        <input class={styles.input}
+        <input className={styles.input}
           type="password"
           {...register("password", { required: true })}
           placeholder="Password"
         />
         {errors.password && <p>Password is required.</p>}
-        <input class={styles.input} type="submit" />
+        <input className={styles.input} type="submit" />
     </form>
     </div>
   );
