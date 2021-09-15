@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "antd/dist/antd.css";
-import { Timeline, Collapse, Button } from "antd";
+import { Timeline, Collapse, Button, message } from "antd";
 import {
   CaretRightOutlined,
   ShopOutlined,
@@ -65,6 +65,22 @@ function trackingDetails() {
     }
   }, [fetching, setFetching, router.isReady]);
 
+  const refreshData = () => {
+    const hide = message.loading("refresh data");
+    getOrderDetails(router.query.orderID)
+      .then((res) => {
+        console.log("Order Details", res);
+        setOrderDetails(res.data.data);
+        setErr(null);
+        hide();
+      })
+      .catch((err) => {
+        console.log("err", err);
+        setErr(err);
+        hide();
+      });
+  };
+
   const convertToReadable = (timestamp) => {
     return new Date(timestamp).toLocaleTimeString();
   };
@@ -94,10 +110,7 @@ function trackingDetails() {
           </div>
           <h2 style={{ color: "#000000" }}>
             Order #{orderDetails.order_number}
-            <Button
-              style={{ marginLeft: "15px" }}
-              onClick={() => setFetching(true)}
-            >
+            <Button style={{ marginLeft: "15px" }} onClick={refreshData}>
               refresh
             </Button>
           </h2>
@@ -134,7 +147,6 @@ function trackingDetails() {
                 <p style={{ fontWeight: "bold" }}>
                   #{orderDetails.order_number}
                 </p>
-                <p style={{ color: "rgba(29, 30, 31, 0.7)" }}>20.00 - 20.30</p>
               </div>
 
               <div style={{ paddingLeft: "10px", paddingBottom: "6px" }}>

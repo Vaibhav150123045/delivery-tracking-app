@@ -36,14 +36,19 @@ const App = (props) => {
   };
 
   const refreshControl = () => {
+    const hide = message.loading("loading hub data.");
     getHubDetails(hubId)
       .then((res) => {
         const { data = {}, message = "" } = res.data;
         console.log("data", data);
         const bags_to_be_received = data.bags_to_be_received;
         setTableData(bags_to_be_received);
+        hide();
       })
-      .catch((err) => console.log("err", err));
+      .catch((err) => {
+        console.log("err", err);
+        hide();
+      });
   };
 
   useEffect(() => {
@@ -65,12 +70,12 @@ const App = (props) => {
       sortable: true,
       // filter: "agTextColumnFilter",
     },
-    {
-      headerName: "Next destination",
-      field: "next_destination",
-      width: 150,
-      filter: "agSetColumnFilter",
-    },
+    // {
+    //   headerName: "Next destination",
+    //   field: "next_destination",
+    //   width: 150,
+    //   filter: "agSetColumnFilter",
+    // },
 
     {
       headerName: "current hub",
@@ -94,11 +99,11 @@ const App = (props) => {
       width: 150,
       //   filter: "agSetColumnFilter",
     },
-    {
-      headerName: "Vehicle numbers",
-      field: "vehicle_numbers",
-      widht: "150",
-    },
+    // {
+    //   headerName: "Vehicle numbers",
+    //   field: "vehicle_numbers",
+    //   widht: "150",
+    // },
     {
       headerName: "weight",
       field: "weight",

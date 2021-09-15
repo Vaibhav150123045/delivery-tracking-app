@@ -5,7 +5,7 @@ import {
   AlignLeftOutlined,
   CaretDownOutlined,
 } from "@ant-design/icons";
-import { Menu, Dropdown, Button, Space, Spin } from "antd";
+import { Menu, Dropdown, Button, Space, Spin, message } from "antd";
 import CardView from "../../components/seller/CardView";
 import { getAllSellerOrders, sellerReceive, sellerMarkTransit } from "../api";
 
@@ -46,31 +46,45 @@ const styles = {
 };
 
 export default function Seller(props) {
-  const [allOrders, setAllOrders] = useState([]);
+  const [allOrders, setAllOrders] = useState(props.list);
+  // const [allOrders, setAllOrders] = useState([]);
   const [fetching, setFetching] = useState(false);
 
-  useEffect(() => {
-    setFetching(true);
-    getAllSellerOrders(235)
-      .then((res) => {
-        console.log("all shop orders response", res.data);
-        setAllOrders(res.data.data);
-        setFetching(false);
-      })
-      .catch((err) => {
-        setFetching(false);
-      });
-  }, []);
+  // useEffect(() => {
+  //   setFetching(true);
+  //   getAllSellerOrders(235)
+  //     .then((res) => {
+  //       console.log("all shop orders response", res.data);
+  //       let oldList = res.data.data;
+  //       let newList = [];
+  //       for (let i = oldList.length - 1; i >= 0; i--) {
+  //         newList.push(oldList[i]);
+  //       }
+  //       setAllOrders(newList);
+  //       setFetching(false);
+  //     })
+  //     .catch((err) => {
+  //       setFetching(false);
+  //     });
+  // }, []);
 
   const refreshData = () => {
+    const hide = message.loading("refresh data");
     getAllSellerOrders(235)
       .then((res) => {
         console.log("all shop orders response", res.data);
-        setAllOrders(res.data.data);
+        let oldList = res.data.data;
+        let newList = [];
+        for (let i = oldList.length - 1; i >= 0; i--) {
+          newList.push(oldList[i]);
+        }
+        setAllOrders(newList);
         setFetching(false);
+        hide();
       })
       .catch((err) => {
         setFetching(false);
+        hide();
       });
   };
 
@@ -98,7 +112,12 @@ export default function Seller(props) {
               }}
             />
           </div>
-          <h2 style={{ color: "#000000" }}>Seller </h2>
+          <h2 style={{ color: "#000000" }}>
+            Seller{" "}
+            <Button style={{ marginLeft: "20px" }} onClick={refreshData}>
+              refresh
+            </Button>
+          </h2>
         </div>
       </div>
 
@@ -194,3 +213,20 @@ const menu = (
     </Menu.Item>
   </Menu>
 );
+
+export async function getServerSideProps(context) {
+  let newList = [];
+  try {
+    const res = await getAllSellerOrders(235);
+    let oldList = res.data.data;
+    for (let i = oldList.length - 1; i >= 0; i--) {
+      newList.push(oldList[i]);
+    }
+  } catch (err) {}
+
+  return {
+    props: {
+      list: newList,
+    }, // will be passed to the page component as props
+  };
+}

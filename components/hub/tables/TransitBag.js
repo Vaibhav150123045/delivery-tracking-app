@@ -31,14 +31,20 @@ const App = (props) => {
   };
 
   const refreshControl = () => {
+    const hide = message.loading("loading hub data.");
+
     getHubDetails(hubId)
       .then((res) => {
         const { data = {}, message = "" } = res.data;
         console.log("data", data);
         const bags_to_transit = data.bags_to_transit;
         setTableData(bags_to_transit);
+        hide();
       })
-      .catch((err) => console.log("err", err));
+      .catch((err) => {
+        console.log("err", err);
+        hide();
+      });
   };
 
   useEffect(() => {
