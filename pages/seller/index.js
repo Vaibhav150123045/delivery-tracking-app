@@ -1,11 +1,13 @@
+import React, { useState, useEffect } from "react";
 import "antd/dist/antd.css";
 import {
   SearchOutlined,
   AlignLeftOutlined,
   CaretDownOutlined,
 } from "@ant-design/icons";
-import { Menu, Dropdown, Button, Space } from "antd";
+import { Menu, Dropdown, Button, Space, Spin } from "antd";
 import CardView from "../../components/seller/CardView";
+import { getAllSellerOrders, sellerReceive, sellerMarkTransit } from "../api";
 
 const styles = {
   body: {
@@ -43,7 +45,23 @@ const styles = {
   },
 };
 
-export default function Seller() {
+export default function Seller(props) {
+  const [allOrders, setAllOrders] = useState([]);
+  const [fetching, setFetching] = useState(false);
+
+  useEffect(() => {
+    setFetching(true);
+    getAllSellerOrders(235)
+      .then((res) => {
+        console.log("all shop orders response", res.data);
+        setAllOrders(res.data.data);
+        setFetching(false);
+      })
+      .catch((err) => {
+        setFetching(false);
+      });
+  }, []);
+
   return (
     <body style={styles.body}>
       <div
@@ -67,7 +85,7 @@ export default function Seller() {
               }}
             />
           </div>
-          <h2 style={{ color: "#000000" }}>SDX Partner</h2>
+          <h2 style={{ color: "#000000" }}>Seller </h2>
         </div>
         <div style={styles.searchContainer}>
           <SearchOutlined
@@ -98,8 +116,8 @@ export default function Seller() {
         </div>
       </Dropdown>
       <div style={{ paddingBottom: "200px" }}>
-        {[1, 2, 3, 4].map((el, i) => (
-          <CardView key={i} />
+        {allOrders.map((el, i) => (
+          <CardView key={i} {...el} index={i} />
         ))}
       </div>
     </body>
@@ -112,7 +130,7 @@ const menu = (
       <a
         target="_blank"
         rel="noopener noreferrer"
-        href="https://www.antgroup.com"
+        // href="https://www.antgroup.com"
       >
         All Orders
       </a>
@@ -121,18 +139,36 @@ const menu = (
       <a
         target="_blank"
         rel="noopener noreferrer"
-        href="https://www.aliyun.com"
+        // href="https://www.aliyun.com"
       >
-        Pending Orders
+        Out for Delivery
       </a>
     </Menu.Item>
     <Menu.Item>
       <a
         target="_blank"
         rel="noopener noreferrer"
-        href="https://www.luohanacademy.com"
+        // href="https://www.luohanacademy.com"
       >
-        Completed Orders
+        New
+      </a>
+    </Menu.Item>
+    <Menu.Item>
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        // href="https://www.luohanacademy.com"
+      >
+        Order Received at Hub
+      </a>
+    </Menu.Item>
+    <Menu.Item>
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        // href="https://www.luohanacademy.com"
+      >
+        Order in Transit
       </a>
     </Menu.Item>
   </Menu>

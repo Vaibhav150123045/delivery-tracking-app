@@ -105,7 +105,7 @@ export default {
   markBagReceive,
   markBagOfd,
   orderDelivered,
-  // getAllSellerOrders,
+  getAllSellerOrders,
   sellerReceive,
   sellerMarkTransit,
   createOrder,
