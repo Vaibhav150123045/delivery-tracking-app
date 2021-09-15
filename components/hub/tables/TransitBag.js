@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AgGridColumn, AgGridReact } from "ag-grid-react";
 import { Input, Button, message, Space } from "antd";
 
@@ -19,15 +19,15 @@ const App = (props) => {
 
     /* fetch data here to populate tables */
 
-    getHubDetails(hubId)
-      .then((res) => {
-        const { data = {}, message = "" } = res.data;
-        console.log("data", data);
-        const bags_to_transit = data.bags_to_transit;
-        // params.api.applyTransaction({ add: bags_to_transit });
-        setTableData(bags_to_transit);
-      })
-      .catch((err) => console.log("err", err));
+    // getHubDetails(hubId)
+    //   .then((res) => {
+    //     const { data = {}, message = "" } = res.data;
+    //     console.log("data", data);
+    //     const bags_to_transit = data.bags_to_transit;
+    //     // params.api.applyTransaction({ add: bags_to_transit });
+    //     setTableData(bags_to_transit);
+    //   })
+    //   .catch((err) => console.log("err", err));
   };
 
   const refreshControl = () => {
@@ -40,6 +40,10 @@ const App = (props) => {
       })
       .catch((err) => console.log("err", err));
   };
+
+  useEffect(() => {
+    refreshControl();
+  }, [hubId]);
 
   const columnDefs = [
     {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AgGridColumn, AgGridReact } from "ag-grid-react";
 import { Input, Button, message } from "antd";
 import SelectHub from "../SelectHub";
@@ -23,16 +23,16 @@ const App = (props) => {
 
     /* fetch data here to populate tables */
 
-    getHubDetails(hubId)
-      .then((res) => {
-        const { data = {}, message = "" } = res.data;
-        console.log("data", data);
+    // getHubDetails(hubId)
+    //   .then((res) => {
+    //     const { data = {}, message = "" } = res.data;
+    //     console.log("data", data);
 
-        const bags_to_be_received = data.bags_to_be_received;
-        setTableData(bags_to_be_received);
-        // params.api.applyTransaction({ add: bags_to_be_received });
-      })
-      .catch((err) => console.log("err", err));
+    //     const bags_to_be_received = data.bags_to_be_received;
+    //     setTableData(bags_to_be_received);
+    //     // params.api.applyTransaction({ add: bags_to_be_received });
+    //   })
+    //   .catch((err) => console.log("err", err));
   };
 
   const refreshControl = () => {
@@ -45,6 +45,10 @@ const App = (props) => {
       })
       .catch((err) => console.log("err", err));
   };
+
+  useEffect(() => {
+    refreshControl();
+  }, [hubId]);
 
   const columnDefs = [
     {

@@ -13,7 +13,13 @@ const HubPage = (props) => {
   const [table, setTable] = useState("receive_o");
   const [allHubs, setAllHubs] = useState([]);
   const [ready, setReady] = useState(false);
-  const { id } = router.query;
+  const [currentHub, setCurrentHub] = useState();
+  // const { id } = router.query;
+
+  useEffect(() => {
+    console.log("query changedd", router);
+    setCurrentHub(router.query.id);
+  }, [router.query.id]);
 
   useEffect(() => {
     getAllHubs()
@@ -32,7 +38,7 @@ const HubPage = (props) => {
   }, [router.isReady]);
 
   const getHubName = () => {
-    console.log("router query od", router.query.id);
+    console.log("router query id", router.query.id);
     const found = allHubs.find((el) => el.id == router.query.id);
     if (found) return found.name;
   };
@@ -55,13 +61,15 @@ const HubPage = (props) => {
             <h2 style={{ marginRight: "20px", marginBottom: 0 }}>
               {getHubName()}
             </h2>
-            <p>hub id: {id}</p>
+            <p>hub id: {currentHub}</p>
           </div>
           <Select
             style={{ width: 200 }}
             placeholder="Search Hub"
             onChange={(val) => {
-              router.push(`/hub/${val}`);
+              console.log("router before", router);
+              router.push(`/hub/${val}`, undefined, { shallow: true });
+              // router.reload();
             }}
           >
             {allHubs.map((el) => (
@@ -71,10 +79,7 @@ const HubPage = (props) => {
             ))}
           </Select>
 
-          <Button
-            style={{ marginLeft: "15px" }}
-            // onClick={() => setFetching(true)}
-          >
+          <Button style={{ marginLeft: "15px" }} onClick={() => alert("open")}>
             refresh
           </Button>
         </div>
@@ -104,13 +109,13 @@ const HubPage = (props) => {
           </Breadcrumb>
         </div>
         {table === "receive_o" ? (
-          <OrderReceive hubId={id} />
+          <OrderReceive hubId={currentHub} />
         ) : table === "receive_b" ? (
-          <BagReceive hubId={id} />
+          <BagReceive hubId={currentHub} />
         ) : table === "transit_b" ? (
-          <TransitBag hubId={id} />
+          <TransitBag hubId={currentHub} />
         ) : (
-          <OfdTable hubId={id} />
+          <OfdTable hubId={currentHub} />
         )}
       </div>
     );
