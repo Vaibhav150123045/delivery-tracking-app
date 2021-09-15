@@ -97,7 +97,7 @@ export const orderDelivered = (data) =>
 export const getTrackingHistory = (order_id) =>
   api.get(`${baseUrl}/tracking/?order_number=${order_id}`);
 
-export default {
+const apis = {
   getHubDetails,
   getAllHubs,
   receiveOrder,
@@ -110,3 +110,5 @@ export default {
   sellerMarkTransit,
   createOrder,
 };
+
+export default apis;
