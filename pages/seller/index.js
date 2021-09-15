@@ -5,7 +5,7 @@ import {
   AlignLeftOutlined,
   CaretDownOutlined,
 } from "@ant-design/icons";
-import { Menu, Dropdown, Button, Space, Spin } from "antd";
+import { Menu, Dropdown, Button, Space, Spin, message } from "antd";
 import CardView from "../../components/seller/CardView";
 import { getAllSellerOrders, sellerReceive, sellerMarkTransit } from "../api";
 
@@ -54,7 +54,12 @@ export default function Seller(props) {
     getAllSellerOrders(235)
       .then((res) => {
         console.log("all shop orders response", res.data);
-        setAllOrders(res.data.data);
+        let oldList = res.data.data;
+        let newList = [];
+        for (let i = oldList.length - 1; i >= 0; i--) {
+          newList.push(oldList[i]);
+        }
+        setAllOrders(newList);
         setFetching(false);
       })
       .catch((err) => {
@@ -63,14 +68,22 @@ export default function Seller(props) {
   }, []);
 
   const refreshData = () => {
+    const hide = message.loading("refresh data");
     getAllSellerOrders(235)
       .then((res) => {
         console.log("all shop orders response", res.data);
-        setAllOrders(res.data.data);
+        let oldList = res.data.data;
+        let newList = [];
+        for (let i = oldList.length - 1; i >= 0; i--) {
+          newList.push(oldList[i]);
+        }
+        setAllOrders(newList);
         setFetching(false);
+        hide();
       })
       .catch((err) => {
         setFetching(false);
+        hide();
       });
   };
 
@@ -98,7 +111,12 @@ export default function Seller(props) {
               }}
             />
           </div>
-          <h2 style={{ color: "#000000" }}>Seller </h2>
+          <h2 style={{ color: "#000000" }}>
+            Seller{" "}
+            <Button style={{ marginLeft: "20px" }} onClick={refreshData}>
+              refresh
+            </Button>
+          </h2>
         </div>
       </div>
 

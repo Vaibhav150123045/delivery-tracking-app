@@ -72,7 +72,6 @@ const CardView = (props) => {
           }}
         >
           <p style={{ fontWeight: "bold" }}># {order_number}</p>
-          <p style={{ color: "rgba(29, 30, 31, 0.7)" }}>20.00 - 20.30</p>
         </div>
 
         <div style={{ paddingLeft: "10px", paddingBottom: "6px" }}>
