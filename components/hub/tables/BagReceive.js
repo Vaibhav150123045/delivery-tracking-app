@@ -70,12 +70,12 @@ const App = (props) => {
       sortable: true,
       // filter: "agTextColumnFilter",
     },
-    {
-      headerName: "Next destination",
-      field: "next_destination",
-      width: 150,
-      filter: "agSetColumnFilter",
-    },
+    // {
+    //   headerName: "Next destination",
+    //   field: "next_destination",
+    //   width: 150,
+    //   filter: "agSetColumnFilter",
+    // },
 
     {
       headerName: "current hub",
@@ -99,11 +99,11 @@ const App = (props) => {
       width: 150,
       //   filter: "agSetColumnFilter",
     },
-    {
-      headerName: "Vehicle numbers",
-      field: "vehicle_numbers",
-      widht: "150",
-    },
+    // {
+    //   headerName: "Vehicle numbers",
+    //   field: "vehicle_numbers",
+    //   widht: "150",
+    // },
     {
       headerName: "weight",
       field: "weight",

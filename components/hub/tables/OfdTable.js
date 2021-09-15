@@ -72,12 +72,12 @@ const App = (props) => {
       width: 150,
       sortable: true,
     },
-    {
-      headerName: "Next destination",
-      field: "current_bin",
-      width: 150,
-      filter: "agSetColumnFilter",
-    },
+    // {
+    //   headerName: "Next destination",
+    //   field: "current_bin",
+    //   width: 150,
+    //   filter: "agSetColumnFilter",
+    // },
 
     {
       headerName: "current hub",
@@ -236,7 +236,7 @@ const RowButton = (props) => {
           handleOfd(payload);
         }}
       >
-        off to delivery
+        mark ofd {loading ? <LoadingOutlined /> : <></>}
       </Button>
     </div>
   );

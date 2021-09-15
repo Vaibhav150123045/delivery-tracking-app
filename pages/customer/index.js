@@ -105,7 +105,7 @@ function Customer() {
         </div>
       </Dropdown>
       {fetching ? (
-        <div style={{ width: "100%", textAlign: "center", paddingTop:"30px" }}>
+        <div style={{ width: "100%", textAlign: "center", paddingTop: "30px" }}>
           <Spin size="large" />
         </div>
       ) : (
@@ -139,10 +139,11 @@ function CardView(key, element) {
     >
       <div
         style={{
-          backgroundColor: "lightgrey",
+          backgroundColor: "white",
           borderRadius: "4px",
           boxShadow:
-            "0px 0px 2px rgba(0, 0, 0, 0.12), 0px 2px 2px rgba(0, 0, 0, 0.12)",
+            "0px 0px 3px rgba(0, 0, 0, 0.2), 0px 3px 3px rgba(0, 0, 0, 0.2)",
+          overflow: "hidden",
         }}
       >
         <div
@@ -157,7 +158,6 @@ function CardView(key, element) {
           }}
         >
           <p style={{ fontWeight: "bold" }}>#{key.element.order_number}</p>
-          <p style={{ color: "rgba(29, 30, 31, 0.7)" }}>20.00 - 20.30</p>
         </div>
 
         <div style={{ paddingLeft: "10px", paddingBottom: "6px" }}>
@@ -237,6 +237,8 @@ function CardView(key, element) {
               height: "100%",
               backgroundColor: "#34A0CE",
               fontSize: "18px",
+              borderBottomLeftRadius: "4px",
+              borderBottomRightRadius: "4px",
               //marginLeft: "5px",
               // marginTop: "7px",
             }}
@@ -256,7 +258,7 @@ const menu = (
       <a
         target="_blank"
         rel="noopener noreferrer"
-        href="https://www.antgroup.com"
+        // href="https://www.antgroup.com"
       >
         All Orders
       </a>
@@ -265,18 +267,36 @@ const menu = (
       <a
         target="_blank"
         rel="noopener noreferrer"
-        href="https://www.aliyun.com"
+        // href="https://www.aliyun.com"
       >
-        Pending Orders
+        Out for Delivery
       </a>
     </Menu.Item>
     <Menu.Item>
       <a
         target="_blank"
         rel="noopener noreferrer"
-        href="https://www.luohanacademy.com"
+        // href="https://www.luohanacademy.com"
       >
-        Completed Orders
+        New
+      </a>
+    </Menu.Item>
+    <Menu.Item>
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        // href="https://www.luohanacademy.com"
+      >
+        Order Received at Hub
+      </a>
+    </Menu.Item>
+    <Menu.Item>
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        // href="https://www.luohanacademy.com"
+      >
+        Order in Transit
       </a>
     </Menu.Item>
   </Menu>

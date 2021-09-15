@@ -50,13 +50,13 @@ const App = (props) => {
   }, [hubId]);
 
   const columnDefs = [
-    {
-      headerName: "Next destination",
-      field: "next_destination",
-      width: 150,
-      checkboxSelection: true,
-      headerCheckboxSelection: true,
-    },
+    // {
+    //   headerName: "Next destination",
+    //   field: "next_destination",
+    //   width: 150,
+    //   checkboxSelection: true,
+    //   headerCheckboxSelection: true,
+    // },
     {
       headerName: "Order number",
       field: "order_number",
@@ -202,7 +202,7 @@ const App = (props) => {
 export default App;
 
 const RowButton = (props) => {
-  const { refreshControl = () => {} } = props;
+  const { refreshControl = () => {}, hubId = "" } = props;
   const { order_status } = props.node.data;
   const [loading, setLoading] = useState(false);
 
@@ -235,6 +235,7 @@ const RowButton = (props) => {
             const { order_number } = rowData;
             const payload = {
               order_number,
+              hub_id: +hubId,
             };
             console.log("payload", payload);
             setLoading(true);
