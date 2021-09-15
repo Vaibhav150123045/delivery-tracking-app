@@ -46,26 +46,27 @@ const styles = {
 };
 
 export default function Seller(props) {
-  const [allOrders, setAllOrders] = useState([]);
+  const [allOrders, setAllOrders] = useState(props.list);
+  // const [allOrders, setAllOrders] = useState([]);
   const [fetching, setFetching] = useState(false);
 
-  useEffect(() => {
-    setFetching(true);
-    getAllSellerOrders(235)
-      .then((res) => {
-        console.log("all shop orders response", res.data);
-        let oldList = res.data.data;
-        let newList = [];
-        for (let i = oldList.length - 1; i >= 0; i--) {
-          newList.push(oldList[i]);
-        }
-        setAllOrders(newList);
-        setFetching(false);
-      })
-      .catch((err) => {
-        setFetching(false);
-      });
-  }, []);
+  // useEffect(() => {
+  //   setFetching(true);
+  //   getAllSellerOrders(235)
+  //     .then((res) => {
+  //       console.log("all shop orders response", res.data);
+  //       let oldList = res.data.data;
+  //       let newList = [];
+  //       for (let i = oldList.length - 1; i >= 0; i--) {
+  //         newList.push(oldList[i]);
+  //       }
+  //       setAllOrders(newList);
+  //       setFetching(false);
+  //     })
+  //     .catch((err) => {
+  //       setFetching(false);
+  //     });
+  // }, []);
 
   const refreshData = () => {
     const hide = message.loading("refresh data");
@@ -212,3 +213,20 @@ const menu = (
     </Menu.Item>
   </Menu>
 );
+
+export async function getServerSideProps(context) {
+  let newList = [];
+  try {
+    const res = await getAllSellerOrders(235);
+    let oldList = res.data.data;
+    for (let i = oldList.length - 1; i >= 0; i--) {
+      newList.push(oldList[i]);
+    }
+  } catch (err) {}
+
+  return {
+    props: {
+      list: newList,
+    }, // will be passed to the page component as props
+  };
+}
