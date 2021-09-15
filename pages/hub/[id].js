@@ -5,13 +5,14 @@ import OrderReceive from "../../components/hub/tables/OrderReceive";
 import TransitBag from "../../components/hub/tables/TransitBag";
 import OfdTable from "../../components/hub/tables/OfdTable";
 import { getAllHubs } from "../api";
-import { Breadcrumb, Alert, Select, Button } from "antd";
+import { Breadcrumb, Alert, Select, Button, message } from "antd";
 const { Option } = Select;
 
 const HubPage = (props) => {
+  const { allHubs = [] } = props;
   const router = useRouter();
   const [table, setTable] = useState("receive_o");
-  const [allHubs, setAllHubs] = useState([]);
+  // const [allHubs, setAllHubs] = useState([]);
   const [ready, setReady] = useState(false);
   const [currentHub, setCurrentHub] = useState();
   // const { id } = router.query;
@@ -21,13 +22,13 @@ const HubPage = (props) => {
     setCurrentHub(router.query.id);
   }, [router.query.id]);
 
-  useEffect(() => {
-    getAllHubs()
-      .then((res) => {
-        setAllHubs(res.data.data);
-      })
-      .catch((err) => {});
-  }, []);
+  // useEffect(() => {
+  //   getAllHubs()
+  //     .then((res) => {
+  //       setAllHubs(res.data.data);
+  //     })
+  //     .catch((err) => {});
+  // }, []);
 
   useEffect(() => {
     if (!router.isReady) {
@@ -78,10 +79,6 @@ const HubPage = (props) => {
               </Option>
             ))}
           </Select>
-
-          <Button style={{ marginLeft: "15px" }} onClick={() => alert("open")}>
-            refresh
-          </Button>
         </div>
         <div style={{ paddingLeft: "30px" }}>
           <Breadcrumb>
@@ -123,3 +120,17 @@ const HubPage = (props) => {
 };
 
 export default HubPage;
+
+export async function getServerSideProps(context) {
+  let allHubs = [];
+  try {
+    const res = await getAllHubs();
+    allHubs = res.data.data;
+  } catch (err) {}
+
+  return {
+    props: {
+      allHubs,
+    },
+  };
+}

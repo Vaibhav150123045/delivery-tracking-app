@@ -30,14 +30,19 @@ const App = (props) => {
   };
 
   const refreshControl = () => {
+    const hide = message.loading("loading hub data.");
     getHubDetails(hubId)
       .then((res) => {
         const { data = {}, message = "" } = res.data;
         console.log("data", data);
         const orders_to_be_received = data.orders_to_be_received;
         setTableData(orders_to_be_received);
+        hide();
       })
-      .catch((err) => console.log("err", err));
+      .catch((err) => {
+        console.log("err", err);
+        hide();
+      });
   };
 
   useEffect(() => {

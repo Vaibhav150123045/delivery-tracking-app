@@ -30,6 +30,8 @@ const App = (props) => {
   };
 
   const refreshControl = () => {
+    const hide = message.loading("loading hub data.");
+
     console.log("called");
     getHubDetails(hubId)
       .then((res) => {
@@ -37,8 +39,12 @@ const App = (props) => {
         console.log("data", data);
         const bags_to_ofd = data.bags_to_ofd;
         setTableData(bags_to_ofd);
+        hide();
       })
-      .catch((err) => console.log("err", err));
+      .catch((err) => {
+        console.log("err", err);
+        hide();
+      });
   };
 
   useEffect(() => {
