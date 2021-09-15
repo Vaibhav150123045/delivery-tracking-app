@@ -20,7 +20,7 @@ const styles = {
     color: "black",
   },
   cardContainer: {
-    width: "360px",
+    // width: "360px",
     paddingLeft: "15px",
     paddingRight: "15px",
     paddingTop: "20px",
@@ -32,7 +32,7 @@ const styles = {
     borderRadius: "4px",
     paddingLeft: "15px",
     // maxWidth: "59%",
-    width: "328px",
+    width: "80%",
     marginLeft: "15px",
     marginTop: "20px",
     boxShadow:
@@ -62,6 +62,18 @@ export default function Seller(props) {
       });
   }, []);
 
+  const refreshData = () => {
+    getAllSellerOrders(235)
+      .then((res) => {
+        console.log("all shop orders response", res.data);
+        setAllOrders(res.data.data);
+        setFetching(false);
+      })
+      .catch((err) => {
+        setFetching(false);
+      });
+  };
+
   return (
     <body style={styles.body}>
       <div
@@ -69,7 +81,8 @@ export default function Seller(props) {
           backgroundColor: "white",
           display: "flex",
           // maxWidth: "60%",
-          width: "360px",
+          // width: "360px",
+          width: "80%",
           justifyContent: "space-between",
           paddingLeft: "15px",
         }}
@@ -86,11 +99,6 @@ export default function Seller(props) {
             />
           </div>
           <h2 style={{ color: "#000000" }}>Seller </h2>
-        </div>
-        <div style={styles.searchContainer}>
-          <SearchOutlined
-            style={{ color: "white", fontSize: "25px", margin: 0 }}
-          />
         </div>
       </div>
 
@@ -116,9 +124,22 @@ export default function Seller(props) {
         </div>
       </Dropdown>
       <div style={{ paddingBottom: "200px" }}>
-        {allOrders.map((el, i) => (
-          <CardView key={i} {...el} index={i} />
-        ))}
+        {fetching ? (
+          <div
+            style={{
+              textAlign: "center",
+              width: "80%",
+              paddingTop: "30px",
+            }}
+          >
+            <Spin size="large" />
+            <p>We are fetching your orders</p>
+          </div>
+        ) : (
+          allOrders.map((el, i) => (
+            <CardView key={i} {...el} index={i} refreshData={refreshData} />
+          ))
+        )}
       </div>
     </body>
   );

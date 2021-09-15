@@ -1,5 +1,13 @@
+import React, { useState, useEffect } from "react";
 import "antd/dist/antd.css";
 import { CheckOutlined } from "@ant-design/icons";
+import { Button, message, Space } from "antd";
+
+import {
+  getAllSellerOrders,
+  sellerReceive,
+  sellerMarkTransit,
+} from "../../pages/api";
 
 const CardView = (props) => {
   const {
@@ -11,7 +19,37 @@ const CardView = (props) => {
     next_destination = "",
     partner_name = "",
     index = 0,
+    refreshData = () => {},
   } = props;
+
+  const [loading, setLoading] = useState(false);
+
+  const markReceive = async (order_number) => {
+    try {
+      setLoading(true);
+      await sellerReceive({ order_number });
+      setLoading(false);
+      message.success(`order ${order_number} is marked received`);
+      refreshData();
+    } catch (err) {
+      setLoading(false);
+      message.error(`order ${order_number} is not marked received`);
+    }
+  };
+
+  const markTransit = async (order_number) => {
+    try {
+      setLoading(true);
+      await sellerMarkTransit({ order_number });
+      setLoading(false);
+      message.success(`order ${order_number} is marked transit`);
+      refreshData();
+    } catch (err) {
+      setLoading(false);
+      message.error(`order ${order_number} is not marked transit`);
+    }
+  };
+
   return (
     <div style={styles.cardContainer}>
       <div
@@ -132,24 +170,32 @@ const CardView = (props) => {
         />
         <div
           style={{
-            paddingTop: "15px",
-            paddingBottom: "15px",
+            paddingTop: "10px",
+            paddingBottom: "10px",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
           }}
         >
-          <CheckOutlined />
-          <span
-            style={{
-              color: "#1D1E1F",
-              fontSize: "12px",
-              marginLeft: "5px",
-              // marginTop: "7px",
-            }}
-          >
-            Mark Ready
-          </span>
+          {order_status.trim().toLowerCase() === "new" ? (
+            <Button
+              type="text"
+              onClick={() => markReceive(order_number)}
+              loading={loading}
+            >
+              Mark received <CheckOutlined />
+            </Button>
+          ) : order_status.trim().toLowerCase() === "seller received order" ? (
+            <Button
+              type="text"
+              onClick={() => markTransit(order_number)}
+              loading={loading}
+            >
+              Mark transit <CheckOutlined />
+            </Button>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </div>
@@ -160,7 +206,8 @@ export default CardView;
 
 const styles = {
   cardContainer: {
-    width: "360px",
+    // width: "360px",
+    width: "80%",
     paddingLeft: "15px",
     paddingRight: "15px",
     paddingTop: "20px",
